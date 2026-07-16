@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace LibreriaAPI.Models
 {
+    [Microsoft.EntityFrameworkCore.Index(nameof(fecha_devolucion))]
     public class Prestamo
     {
         [Key]

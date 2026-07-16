@@ -15,5 +15,10 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.10" />
   </ItemGroup>
-
+	<ItemGroup>
+		<Compile Remove="LibreriaAPI.Tests\**" />
+		<Content Remove="LibreriaAPI.Tests\**" />
+		<EmbeddedResource Remove="LibreriaAPI.Tests\**" />
+		<None Remove="LibreriaAPI.Tests\**" />
+	</ItemGroup>
 </Project>

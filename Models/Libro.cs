@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace LibreriaAPI.Models
 {
+    [Microsoft.EntityFrameworkCore.Index(nameof(año_publicacion))]
     public class Libro
     {
         [Key]

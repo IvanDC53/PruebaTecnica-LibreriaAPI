@@ -8,7 +8,7 @@ namespace LibreriaAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize] // Exige un token válido para entrar a cualquier método de este controlador
+    [Authorize]
     public class AutoresController : ControllerBase
     {
         private readonly AppDbContext _context;

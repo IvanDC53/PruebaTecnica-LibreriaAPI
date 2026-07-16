@@ -64,5 +64,20 @@ namespace LibreriaAPI.Controllers
 
             return Ok(new { mensaje = "El préstamo fue eliminado exitosamente." });
         }
+
+        [HttpGet("pendientes")]
+        public async Task<ActionResult<IEnumerable<Prestamo>>> GetPrestamosPendientes()
+        {
+            var prestamosPendientes = await _context.Prestamos
+                .Where(p => p.fecha_devolucion == null)
+                .ToListAsync();
+
+            if (!prestamosPendientes.Any())
+            {
+                return NotFound(new { mensaje = "No hay préstamos pendientes de devolución en este momento." });
+            }
+
+            return Ok(prestamosPendientes);
+        }
     }
 }

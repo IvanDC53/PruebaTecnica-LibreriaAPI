@@ -62,5 +62,20 @@ namespace LibreriaAPI.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
+
+        [HttpGet("clasicos")]
+        public async Task<ActionResult<IEnumerable<Libro>>> GetLibrosClasicos()
+        {
+            var librosClasicos = await _context.Libros
+                .Where(l => l.año_publicacion < 2000)
+                .ToListAsync();
+
+            if (!librosClasicos.Any())
+            {
+                return NotFound(new { mensaje = "No se encontraron libros publicados antes del año 2000." });
+            }
+
+            return Ok(librosClasicos);
+        }
     }
 }

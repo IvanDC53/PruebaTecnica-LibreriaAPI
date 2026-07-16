@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using LibreriaAPI.Data;
 using LibreriaAPI.Models;
 
@@ -7,6 +8,7 @@ namespace LibreriaAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LibrosController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -22,21 +24,27 @@ namespace LibreriaAPI.Controllers
             return await _context.Libros.ToListAsync();
         }
 
+        [HttpGet("clasicos")]
+        public async Task<ActionResult<IEnumerable<Libro>>> GetLibrosClasicos()
+        {
+            var librosClasicos = await _context.Libros.Where(l => l.año_publicacion < 2000).ToListAsync();
+            if (!librosClasicos.Any()) return NotFound(new { mensaje = "No se encontraron libros clásicos." });
+            return Ok(librosClasicos);
+        }
+
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         public async Task<ActionResult<Libro>> PostLibro(Libro libro)
         {
             var autorExiste = await _context.Autores.AnyAsync(a => a.autor_id == libro.autor_id);
-            if (!autorExiste)
-            {
-                return BadRequest(new { mensaje = $"Error: El autor con ID {libro.autor_id} no existe en la base de datos." });
-            }
+            if (!autorExiste) return BadRequest(new { mensaje = $"El autor con ID {libro.autor_id} no existe." });
 
             _context.Libros.Add(libro);
             await _context.SaveChangesAsync();
-
             return CreatedAtAction(nameof(GetLibros), new { id = libro.libro_id }, libro);
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLibro(int id, Libro libro)
         {
@@ -52,6 +60,7 @@ namespace LibreriaAPI.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLibro(int id)
         {
@@ -61,21 +70,6 @@ namespace LibreriaAPI.Controllers
             _context.Libros.Remove(libro);
             await _context.SaveChangesAsync();
             return NoContent();
-        }
-
-        [HttpGet("clasicos")]
-        public async Task<ActionResult<IEnumerable<Libro>>> GetLibrosClasicos()
-        {
-            var librosClasicos = await _context.Libros
-                .Where(l => l.año_publicacion < 2000)
-                .ToListAsync();
-
-            if (!librosClasicos.Any())
-            {
-                return NotFound(new { mensaje = "No se encontraron libros publicados antes del año 2000." });
-            }
-
-            return Ok(librosClasicos);
         }
     }
 }

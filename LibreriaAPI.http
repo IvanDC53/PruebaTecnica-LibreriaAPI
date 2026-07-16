@@ -1,6 +1,47 @@
-@LibreriaAPI_HostAddress = http://localhost:5109
+@url = http://localhost:5000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImFkbWluIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW5pc3RyYWRvciIsImV4cCI6MTc4NDIxMDc5OSwiaXNzIjoiTGlicmVyaWFBUEkiLCJhdWQiOiJMaWJyZXJpYUFQSVVzdWFyaW9zIn0.lqowX0NHSxRaXLZOer1y__BSwZFa1xybdSDGokrLT4Y
 
-GET {{LibreriaAPI_HostAddress}}/weatherforecast/
-Accept: application/json
+### 1. OBTENER LA LLAVE (LOGIN)
+# Haz clic en "Send request" para generar el token a la derecha
+POST {{url}}/api/Auth/login
+Content-Type: application/json
 
-###
+{
+  "usuario": "admin",
+  "password": "admin123"
+}
+
+
+### 2. PRUEBA GET: Listar Autores 
+GET {{url}}/api/Autores
+Authorization: Bearer {{token}}
+
+
+### 3. PRUEBA POST: Crear un nuevo Autor 
+POST {{url}}/api/Autores
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Isabel Allende",
+  "nacionalidad": "Chilena"
+}
+
+
+### 4. PRUEBA PUT: Actualizar el autor
+# ¡OJO! Cambia el número "4" por el ID que te haya devuelto el POST anterior
+PUT {{url}}/api/Autores/4
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "autor_id": 4,
+  "nombre": "Isabel Allende Llona",
+  "nacionalidad": "Chilena"
+}
+
+
+### 5. PRUEBA DELETE: Eliminar el autor
+# ¡OJO! Cambia el número "4" por el ID de tu autor
+DELETE {{url}}/api/Autores/4
+Authorization: Bearer {{token}}
